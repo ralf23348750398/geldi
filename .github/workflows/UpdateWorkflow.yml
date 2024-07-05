@@ -1,0 +1,31 @@
+name: Update Fork
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight
+  workflow_dispatch: # Allows for manual trigger
+
+jobs:
+  update-fork:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'ralf23348750398'
+          git config --global user.email 'ralf.stockreiter@posteo.de'
+
+      - name: Add upstream
+        run: git remote add upstream https://github.com/julian-kofler/geldi.git
+
+      - name: Fetch upstream
+        run: git fetch upstream
+
+      - name: Rebase onto upstream/main
+        run: |
+          git checkout main
+          git pull --rebase upstream main
+          git push origin main --force
